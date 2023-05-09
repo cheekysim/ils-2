@@ -3,13 +3,11 @@ import { createClient } from 'redis';
 import { getToken } from './auth.js';
 import { ping } from './ping.js';
 import { getData } from './get.js';
-import { parse } from 'path';
-import { connect } from 'http2';
 
 const router = express.Router();
 
 const redis = createClient({
-	url: `redis://${process.env.SERVER_IP}:6379`,
+	url: `redis://${process.env.R_SERVER_IP}:6379`,
 })
 	.on('ready', () => console.log('Connected to Redis'))
 	.on('end', () => console.log('Disconnected from Redis'))

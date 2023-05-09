@@ -24,7 +24,7 @@ app.get('/', (req, res) => {
 
 // Handle 404 requests
 app.all('*', (req, res) => {
-	// Redirect the user to the repository
+	// Redirect the user to the homepage if the request is not an API request
 	if (!req.path.includes('/api/')) return res.status(302).redirect('/');
 	res.status(404).render('error', { code: 418 });
 });

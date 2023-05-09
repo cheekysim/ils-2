@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+      "module": "NodeNext",
+      "moduleResolution": "nodenext",
+      "target": "ES2020",
+      "sourceMap": false,
+      "outDir": "dist",
+      "noImplicitAny": true,
+      "removeComments": true,
+      "preserveConstEnums": true,
+      "alwaysStrict": true
+  },
+  "include": ["src/**/*"],
+  "ts-node": {
+      "esm": true
+  }
+}

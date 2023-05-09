@@ -12,7 +12,7 @@ const redis = createClient({
 	.on('ready', () => console.log('Connected to Redis'))
 	.on('end', () => console.log('Disconnected from Redis'))
 
-const apiPath = '/' + __dirname.split('/').slice(-2).join('/');
+const apiPath = '/' + __dirname.split(/[\\/]/g).slice(-2).join('/');
 
 console.log(apiPath);
 

@@ -1,31 +1,37 @@
-let donut;
+let donut: any;
 
-function render(donutChart) {
+function render(donutChart: any) {
 	let xml = new XMLHttpRequest();
 	xml.open('GET', '/api/v1/data');
 	xml.send();
 	xml.onreadystatechange = () => {
 		if (xml.readyState === 4) {
 			// Remove Loading
-			document.querySelectorAll('.card').forEach((card) => {
-				card.classList.remove('loading-card');
-				card.classList.add('hoverable');
-			});
-			document.querySelectorAll('.loading').forEach((element) => {
-				element.dataset.loading = 'false';
-                setTimeout(() => {
-                    element.remove();
-                }, 500);
-			});
-			document.querySelectorAll('.loader').forEach((element) => {
-                element.dataset.loading = 'false';
-                setTimeout(() => {
-                    element.remove();
-                }, 500);
-			});
-            document.getElementById('chart').dataset.loading = false;
+			document
+				.querySelectorAll<HTMLDivElement>('.card')
+				.forEach((card) => {
+					card.classList.remove('loading-card');
+					card.classList.add('hoverable');
+				});
+			document
+				.querySelectorAll<HTMLDivElement>('.loading')
+				.forEach((element) => {
+					element.dataset.loading = 'false';
+					setTimeout(() => {
+						element.remove();
+					}, 500);
+				});
+			document
+				.querySelectorAll<HTMLDivElement>('.loader')
+				.forEach((element) => {
+					element.dataset.loading = 'false';
+					setTimeout(() => {
+						element.remove();
+					}, 500);
+				});
+			document.getElementById('chart').dataset.loading = 'false';
 
-            // Parse Response
+			// Parse Response
 			const { coleg_gwent, bridgend_college } = JSON.parse(
 				xml.responseText,
 			);
@@ -79,10 +85,11 @@ function render(donutChart) {
 					rotation: 180,
 					animation: {
 						duration: 0,
-					}
+					},
 				},
 			};
 			if (donutChart === undefined) {
+				// @ts-ignore
 				donut = new Chart(ctx, config);
 			} else {
 				donutChart.data = config.data;

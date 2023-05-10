@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import path from 'path';
 import apiV1 from './routes/api/v1/api.js';
 
+
 dotenv.config();
 
 console.log(__dirname);

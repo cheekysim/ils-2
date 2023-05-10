@@ -4,11 +4,13 @@
   "description": "",
   "main": "dist/index.js",
   "scripts": {
-    "build": "tsc && npm run copy-src",
+    "clean": "rimraf dist", 
+    "tsc": "tsc",
+    "build": "npm-run-all tsc copy-src",
     "start": "node dist/index.js",
     "dev": "concurrently --kill-others \"npx tsc --watch\" \"nodemon -q -e ejs,css,js --exec \\\"npm-run-all --parallel copy-src start\\\"\"",
     "copy-src": "gulp",
-    "prod": "npm-run-all build start"
+    "prod": "npm-run-all clean build start"
   },
   "keywords": [],
   "author": "",

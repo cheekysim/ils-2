@@ -7,10 +7,10 @@ import { getData } from './get.js';
 const router = express.Router();
 
 const redis = createClient({
-	url: `redis://${process.env.R_SERVER_IP}:6379`,
+	url: `redis://${process.env.SERVER_IP}:6379`,
 })
 	.on('ready', () => console.log('Connected to Redis'))
-	.on('end', () => console.log('Disconnected from Redis'))
+	.on('end', () => console.log('Disconnected from Redis'));
 
 const apiPath = '/' + __dirname.split(/[\\/]/g).slice(-2).join('/');
 
@@ -51,35 +51,34 @@ interface LeaderboardMemberEdge {
 }
 
 router.get(`${apiPath}/data`, async (req, res) => {
-    let redisAttempts = 0
-    let connected = false
+	let redisAttempts = 0;
+	let connected = false;
 
-    while (!connected && redisAttempts < 3) {
-        try {
-            await redis.connect();
-            connected = true;
-        } catch (error) {
-            redisAttempts++;
-            console.log(`Redis Failed | ${redisAttempts} / 3`)
-        }
-    }
+	while (!connected && redisAttempts < 3) {
+		try {
+			await redis.connect();
+			connected = true;
+		} catch (error) {
+			redisAttempts++;
+			console.log(`Redis Failed | ${redisAttempts} / 3`);
+		}
+	}
 
-    let token;
+	let token;
 
-    if (!connected) {
-        token = await getToken();
-    } else {
-        token = (await redis.get('il-token')) || (await getToken());
-    
-        const valid = await ping(token);
-        if (!valid) {
-            token = await getToken();
-        }
-    
-        await redis.set('il-token', token);
-        await redis.disconnect();
-    }
+	if (!connected) {
+		token = await getToken();
+	} else {
+		token = (await redis.get('il-token')) || (await getToken());
 
+		const valid = await ping(token);
+		if (!valid) {
+			token = await getToken();
+		}
+
+		await redis.set('il-token', token);
+		await redis.disconnect();
+	}
 
 	const data = await getData(token);
 

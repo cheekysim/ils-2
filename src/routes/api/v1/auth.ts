@@ -19,11 +19,17 @@ async function getToken() {
 		},
 	};
 
+	// 28 03
+
 	const res = await axios.request(options);
-	return parseCookies(res.headers['set-cookie'][3])['_session_id'];
+
+	const parsedCookies = parseCookies(res.headers['set-cookie']);
+	console.log(`Token: ${parsedCookies['_session_id']}`);
+	return parsedCookies['_session_id'];
 }
 
-function parseCookies(cookies: string): { [key: string]: string } {
+function parseCookies(cookies: string | string[]): { [key: string]: string } {
+	if (Array.isArray(cookies)) cookies = cookies.join('; ');
 	return cookies
 		.split(/; /g)
 		.reduce((cookieDict: { [key: string]: string }, cookie) => {

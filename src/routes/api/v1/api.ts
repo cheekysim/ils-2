@@ -61,6 +61,7 @@ router.get(`${apiPath}/data`, async (req, res) => {
 		} catch (error) {
 			redisAttempts++;
 			console.log(`Redis Failed | ${redisAttempts} / 3`);
+			console.log(error);
 		}
 	}
 

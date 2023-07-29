@@ -85,17 +85,6 @@ router.get(`${apiPath}/data`, async (req, res) => {
 	res.send(parseILData(data));
 });
 
-// Might be used in the future
-router.get(`${apiPath}/code`, async (req, res) => {
-	const code = req.query.code;
-	if (code) {
-		const message = require('http').STATUS_CODES[code.toString()];
-		res.status(200).send(JSON.stringify({ message: message }));
-	} else {
-		res.status(404).send('No Code Provided');
-	}
-});
-
 function parseILData(data: LeaderboardBody) {
 	return data.data.leaderboardConnection.edges.reduce(
 		(

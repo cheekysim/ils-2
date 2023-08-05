@@ -69,6 +69,10 @@ router.get(`${apiPath}/data`, async (req, res) => {
 			console.log(`Redis Failed | ${redisAttempts + 1} / 3`);
 			console.log(err);
 			await redis.disconnect();
+			if (redisAttempts === 2) {
+				console.log('Redis Failed To Connect');
+				token = await getToken();
+			}
 		}
 	}
 

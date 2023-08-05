@@ -51,35 +51,25 @@ interface LeaderboardMemberEdge {
 }
 
 router.get(`${apiPath}/data`, async (req, res) => {
-	let redisAttempts = 0;
-	let connected = false;
-
-	while (!connected && redisAttempts < 3) {
+	let token: string;
+	for (let redisAttempts = 0; redisAttempts < 3; redisAttempts++) {
 		try {
 			await redis.connect();
-			connected = true;
-		} catch (error) {
+			token = (await redis.get('il-token')) || (await getToken());
+			const valid = await ping(token);
+			if (!valid) {
+				token = await getToken();
+			}
+
+			await redis.set('il-token', token);
+
 			await redis.disconnect();
-			redisAttempts++;
-			console.log(`Redis Failed | ${redisAttempts} / 3`);
-			console.log(error);
+			break;
+		} catch (err) {
+			console.log(`Redis Failed | ${redisAttempts + 1} / 3`);
+			console.log(err);
+			await redis.disconnect();
 		}
-	}
-
-	let token;
-
-	if (!connected) {
-		token = await getToken();
-	} else {
-		token = (await redis.get('il-token')) || (await getToken());
-
-		const valid = await ping(token);
-		if (!valid) {
-			token = await getToken();
-		}
-
-		await redis.set('il-token', token);
-		await redis.disconnect();
 	}
 
 	const data = await getData(token);

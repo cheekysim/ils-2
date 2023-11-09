@@ -11,12 +11,4 @@ services:
       - R_SERVER_IP=${R_SERVER_IP}
     ports:
       - 3005:3000
-    labels:
-      - "traefik.http.routers.ils.rule=Host(`ils.cheekysim.com`)"
-    networks:
-      - traefik
     restart: unless-stopped
-
-networks:
-  traefik:
-    name: traefik_default
